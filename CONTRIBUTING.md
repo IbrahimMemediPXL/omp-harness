@@ -1,5 +1,7 @@
 # Bijdragen
 
+Iedereen kan een issue openen of via een fork en eigen branch een PR indienen. Rechtstreeks branches in deze repo maken vereist een uitnodiging als collaborator. Main is bedoeld voor beheer door de eigenaar/admins; zie [GitHub-toegang en activering van de bescherming](docs/github-access.md).
+
 Werk op een featurebranch en stuur een pull request naar main. Push niet rechtstreeks naar de standaardbranch en herschrijf geen gedeelde geschiedenis. Lees eerst AGENTS.md en de relevante documentatie.
 
 Houd veranderingen klein. Leg probleem, aanpak en werkelijk uitgevoerde tests uit in de PR. Vermeld beperkingen. Upgrades, integraties en permissiewijzigingen vereisen ook documentatie en een risicoafweging.
@@ -31,4 +33,4 @@ Controleer voor commit welke bestanden meegaan. .gitignore is geen secret-scanne
 - Zijn gedrag, foutpaden, tests en handleiding bijgewerkt?
 - Zijn credentials, mounts en goedkeuringsgrenzen behouden?
 
-Een volgende stap is automatische PR-validatie en branchbescherming met verplichte review. Deze inrichting configureert die GitHub-instellingen niet. Laat ook periodiek een echte devcontainer-smoketest uitvoeren.
+Een volgende stap is automatische PR-validatie. De ruleset-bestanden moeten afzonderlijk in GitHub worden geactiveerd; een merge alleen schakelt bescherming niet in. Laat ook periodiek een echte devcontainer-smoketest uitvoeren.
