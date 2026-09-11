@@ -1,0 +1,17 @@
+{
+  "name": "OMP Harness",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "args": { "OMP_REF": "${localEnv:OMP_REF:}" }
+  },
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "mounts": [
+    "source=omp-harness-${devcontainerId}-agent-data,target=/home/agent/.omp,type=volume"
+  ],
+  "remoteUser": "agent",
+  "containerUser": "agent",
+  "runArgs": ["--cap-drop=ALL", "--security-opt=no-new-privileges:true", "--pids-limit=512", "--memory=4g", "--cpus=4"],
+  "postCreateCommand": "bash .devcontainer/post-create.sh"
+}

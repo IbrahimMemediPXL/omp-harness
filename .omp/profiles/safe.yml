@@ -1,0 +1,13 @@
+tools:
+  approvalMode: always-ask
+  approval:
+    bash: prompt
+    eval: prompt
+    edit: prompt
+    delete: prompt
+    move: prompt
+    computer: deny
+computer:
+  enabled: false
+browser:
+  enabled: false
