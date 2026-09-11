@@ -59,7 +59,15 @@ Volg het upstream schema voor .omp/mcp.json. Commit geen tokens. Een lege projec
 
 ## Meerdere agenten
 
-Deze repository configureert geen eigen multi-agentorkestratie. Onafhankelijke analyses zoals review en documentatiecontrole kunnen zich lenen voor verdeling. Voor kleine edits geeft één agent vaak minder dubbel werk.
+De baseline en alle profielen stellen `task.maxConcurrency: 3` in. OMP begrenst daarmee gelijktijdige subagents per sessie; de hoofdagent telt niet mee. Extra taken wachten op een vrij slot. Dit beperkt niet het totale aantal taken dat na elkaar kan worden uitgevoerd.
+
+De instelling is geen globale grens over meerdere OMP-processen of geneste sessies en blijft wijzigbaar door processen met dezelfde rechten. De werkregels verbieden omzeiling via extra sessies, geneste delegatie of configuratiewijzigingen. Er is geen eigen orkestratielaag toegevoegd.
+
+Controleer na een herstart van OMP met `make doctor`, of afzonderlijk met `omp --config .omp/profiles/safe.yml config get task.maxConcurrency`. Verwacht `3`. Doe na OMP-upgrades een onschuldige proef met vier onafhankelijke taken: maximaal drie mogen tegelijk draaien. De statische validatie voert die modeltest niet uit.
+
+De instelling en sessiescope zijn gecontroleerd in het [upstream schema](https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/src/config/settings-schema.ts) en de [task-implementatie](https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/src/task/index.ts).
+
+Onafhankelijke analyses zoals review en documentatiecontrole kunnen zich lenen voor verdeling. Voor kleine edits geeft één agent vaak minder dubbel werk.
 
 Geef iedere agent een afgebakende taak, voorkom gelijktijdige edits aan dezelfde bestanden en laat één verantwoordelijke integreren en testen. Controleer echte subagentgoedkeuringen: upstream beschrijft headless subagenten met YOLO-uitvoering en expliciete prompt-denies. SAFE bij de hoofdagent bewijst dus niet dat subagenten dezelfde bevestigingen vragen. Houd rekening met extra modelgebruik en accountlimieten.
 

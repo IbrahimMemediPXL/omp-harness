@@ -1,0 +1,54 @@
+name: Bug, verbetering of documentatie
+description: Beschrijf het probleem en wanneer het opgelost is.
+body:
+  - type: markdown
+    attributes:
+      value: "Gebruik een concrete titel. Deel geen tokens, callback-URLs, .env-inhoud of persoonsgegevens."
+  - type: dropdown
+    id: type
+    attributes:
+      label: Soort
+      options:
+        - Bug
+        - Verbetering
+        - Documentatie of vraag
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Wat is het probleem?
+      description: Wat lukt niet, wie heeft er last van en waarom is dit belangrijk?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Gewenst resultaat
+      description: Wat moet er gebeuren? Beschrijf het resultaat voordat je een oplossing voorstelt.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproductiestappen en werkelijk gedrag
+      description: Bij een bug verplicht om bruikbaar te zijn; anders mag dit leeg blijven.
+      placeholder: "1. Start ...\n2. Voer ... uit\n3. Verwacht ..., maar zie ..."
+  - type: textarea
+    id: environment
+    attributes:
+      label: Omgeving
+      description: Bij bugs graag besturingssysteem, OMP-versie, branch/commit en profiel (SAFE/NORMAL/YOLO).
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Wanneer is dit klaar?
+      description: Geef concrete, controleerbare acceptatiecriteria.
+      placeholder: "- [ ] ... werkt wanneer ...\n- [ ] De documentatie legt ... uit"
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Extra context of voorstel
+      description: Optioneel — alternatieven, relevante links of opgeschoonde foutmeldingen.

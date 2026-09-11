@@ -22,6 +22,8 @@ def main():
     assert '--security-opt=no-new-privileges:true' in container['runArgs']
     mcp = json.loads((ROOT / '.omp/mcp.json').read_text())
     assert mcp['mcpServers'] == {}
+    baseline = yaml.safe_load((ROOT / '.omp/config.yml').read_text())
+    assert baseline['task']['maxConcurrency'] == 3
     for folder in ['.omp', '.github']:
         for path in (ROOT / folder).rglob('*.yml'):
             yaml.safe_load(path.read_text())
@@ -31,6 +33,7 @@ def main():
     for profile, mode in [('safe', 'always-ask'), ('normal', 'write'), ('yolo', 'yolo')]:
         config = yaml.safe_load((ROOT / f'.omp/profiles/{profile}.yml').read_text())
         assert config['tools']['approvalMode'] == mode
+        assert config['task']['maxConcurrency'] == 3, profile
         assert config['computer']['enabled'] is False
         assert config['browser']['enabled'] is False
         if profile != 'yolo':

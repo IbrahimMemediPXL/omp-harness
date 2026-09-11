@@ -37,6 +37,12 @@ for spec in safe:always-ask normal:write yolo:yolo; do
     printf 'FAIL Cannot read %s profile\n' "$profile"
     failed=1
   fi
+  if actual=$(omp --config ".omp/profiles/$profile.yml" config get task.maxConcurrency 2>/dev/null); then
+    check "$profile subagent concurrency limit" test "$actual" = 3
+  else
+    printf 'FAIL Cannot read %s subagent limit\n' "$profile"
+    failed=1
+  fi
 done
 printf '%s\n' 'INFO OAuth is not verified by doctor. Use make login and test a small request.'
 printf '%s\n' 'INFO Check actual mounts and limits with docker inspect on the host.'

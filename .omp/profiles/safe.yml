@@ -1,3 +1,5 @@
+task:
+  maxConcurrency: 3
 tools:
   approvalMode: always-ask
   approval:
