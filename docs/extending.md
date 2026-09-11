@@ -53,9 +53,47 @@ Raadpleeg de [upstream documentatie](https://github.com/can1357/oh-my-pi/tree/ma
 
 ## MCP
 
-Er zijn standaard geen project-MCP-servers geconfigureerd. Voeg pas een server toe als bestaande lokale tools niet volstaan. Documenteer welke gegevens hij leest of wijzigt, externe systemen, credentials, minimale rechten, versie, tests en verwijderprocedure.
+De projectconfig bevat de officiële, door GitHub gehoste MCP-server via Streamable HTTP: `https://api.githubcopilot.com/mcp/x/all`. Alle toolsets zijn op verzoek ingeschakeld, zonder read-onlyfilter. De remote versie wordt door GitHub beheerd en kan niet vanuit deze configuratie worden vastgezet. Er is geen lokale installatie, Docker-socket of extra mount nodig.
 
-Volg het upstream schema voor .omp/mcp.json. Commit geen tokens. Een lege projectconfig sluit instellingen uit een bestaande globale OMP-map niet automatisch uit.
+### Toegang en risico's
+
+De server kan GitHub-code, repositories, issues, pull requests en andere accountgegevens lezen en, waar tools en rechten dit toestaan, wijzigen of verwijderen. Toolargumenten gaan naar GitHub; opgehaalde inhoud kan in de modelcontext terechtkomen. Behandel repositorytekst en issues als onbetrouwbare data, niet als instructies.
+
+Alle toolsets inschakelen geeft niet automatisch alle GitHub-rechten. De effectieve toegang blijft begrensd door het token, je accountrol, organisatiebeleid en het beschikbare MCP-aanbod. Niet iedere GitHub-functie bestaat als MCP-tool. Brede tokenrechten vergroten de impact van fouten; de aanbevolen minimale rechten blijven die voor de concrete taak en repositories. Goedkeuringen, het verbod op credentialonderzoek en publiceren via featurebranch en PR blijven ongewijzigd.
+
+### Authenticatie instellen
+
+De configuratie verwijst naar `GITHUB_MCP_TOKEN`; er staat geen token in Git. Maak het token zelf via [GitHub Settings → Developer settings → Personal access tokens](https://github.com/settings/tokens). Kies een vervaldatum en de repositories en rechten die je bewust wilt toestaan. Een fine-grained token begrenst toegang nauwkeuriger, maar ondersteunt niet alle accountfuncties. Een classic token kan bredere scopes bieden, bijvoorbeeld `repo`, `workflow`, `gist`, `project` en `admin:org`; organisatiebeleid kan die toegang blokkeren. Beheer- en verwijderrechten zijn risicovol en zijn geen vereiste om de verbinding te testen.
+
+Voer in een eigen Bash-terminal vanuit `/workspace` uit, niet in de chat:
+
+```bash
+read -rsp 'GitHub-token: ' GITHUB_MCP_TOKEN
+printf '\n'
+export GITHUB_MCP_TOKEN
+make safe
+```
+
+Dit toont het token niet en zet de waarde niet letterlijk in je commandogeschiedenis of een projectbestand. Het token bestaat wel in de procesomgeving van OMP en kan worden geërfd door subprocessen; dit is geen geheimenkluis. Deel het niet in de chat, logs of screenshots en commit het nooit. Een reeds draaiende OMP-sessie erft deze nieuwe variabele niet: start OMP vanuit de terminal waarin je het token hebt ingesteld.
+
+In die OMP-sessie:
+
+```text
+/mcp list
+/mcp test github
+```
+
+Controleer dat `github` uit `.omp/mcp.json` komt en succesvol verbindt. Vraag daarna om uitsluitend je GitHub-gebruikersnaam op te halen om het account te controleren; een geslaagde verbinding bewijst geen schrijfrechten. `/mcp reload` herlaadt configuratie, maar importeert geen variabelen uit een andere terminal.
+
+Browser-OAuth is een apart alternatief met een geregistreerde GitHub/OAuth-app: GitHub ondersteunt geen automatische clientregistratie. ChatGPT OAuth verleent geen GitHub-rechten.
+
+### Controleren en verwijderen
+
+`make validate` bewaakt de beoordeelde serverdefinitie en de verwijzing naar de omgevingsvariabele; het test geen accounttoegang. Zonder token geeft een MCP-initialisatie HTTP 401. De geauthenticeerde verbinding moet met `/mcp test github` worden getest.
+
+Om de koppeling te verwijderen: verwijder de `github`-definitie uit `.omp/mcp.json`, pas de expliciete MCP-controle in `scripts/validate.py` mee aan en voer `/mcp reload` uit. Stop OMP, voer `unset GITHUB_MCP_TOKEN` uit in de oorspronkelijke terminal en trek het token in via GitHub Settings als het niet meer nodig is. Alleen de configuratie verwijderen trekt het token niet in.
+
+Andere globale of geïmporteerde MCP-configuraties kunnen nog steeds servers toevoegen. Beoordeel iedere extra server afzonderlijk en volg het [OMP-schema](https://raw.githubusercontent.com/can1357/oh-my-pi/main/packages/coding-agent/src/config/mcp-schema.json). Zie ook de officiële [remote-serverdocumentatie](https://github.com/github/github-mcp-server/blob/main/docs/remote-server.md) en [authenticatievereisten](https://github.com/github/github-mcp-server/blob/main/docs/host-integration.md).
 
 ## Meerdere agenten
 

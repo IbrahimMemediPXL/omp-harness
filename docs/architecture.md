@@ -10,7 +10,7 @@ OMP Harness is een startomgeving, geen eigen AI-model en geen vervanging van OMP
 | Named volume op /home/agent/.omp | Login en sessies behouden bij rebuild | Gevoelige persistente state, geen automatische encryptiegarantie |
 | Make | Korte, vindbare commando's | Draait in de container, niet vereist op de host |
 | Drie overlays | Eén baseline met expliciete approval-keuze | Geen afzonderlijke OS-sandbox per profiel |
-| Lege MCP-config | Geen extra servers standaard vertrouwen | Globale/andere discovery-bronnen moeten apart gecontroleerd worden |
+| GitHub MCP via HTTPS | Alle GitHub-toolsets beschikbaar zonder lokale server | Tokenrechten en organisatiebeleid blijven bepalend; globale discovery-bronnen apart beoordelen |
 | Memory/autolearn uit | Minder onverwachte automatische state | Sessies en OAuth worden nog steeds opgeslagen |
 | Rules en skills | Consistent, menselijk onderhoudbaar werk | Gedragsinstructies, geen harde garantie |
 
@@ -45,4 +45,4 @@ De installer komt nog van upstream main; ook de basisimage en apt-packages zijn 
 
 ## Wijzigingen in deze eerste harness-versie
 
-Naam en repositorylinks aangepast; bestaande licentie behouden; private werkdirectories en .env-varianten genegeerd; LF-regelafbrekingen vastgelegd; credentialvolume per Dev Container benoemd; strengere initiële credentialmaprechten; onbetrouwbare OAuth-statusclaim uit doctor verwijderd; logout-uitleg en statische validatie toegevoegd; beginnersdocumentatie opgesplitst. De humane codingregels blijven behouden. Er zijn geen extra MCP's of autonome multi-agent-configuraties geactiveerd.
+Naam en repositorylinks aangepast; bestaande licentie behouden; private werkdirectories en .env-varianten genegeerd; LF-regelafbrekingen vastgelegd; credentialvolume per Dev Container benoemd; strengere initiële credentialmaprechten; onbetrouwbare OAuth-statusclaim uit doctor verwijderd; logout-uitleg en statische validatie toegevoegd; beginnersdocumentatie opgesplitst. De humane codingregels blijven behouden. GitHub MCP is aanvullend expliciet geconfigureerd met alle toolsets en een externe tokenverwijzing; er zijn geen autonome multi-agent-configuraties geactiveerd.
