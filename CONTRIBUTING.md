@@ -6,6 +6,10 @@ Houd veranderingen klein. Leg probleem, aanpak en werkelijk uitgevoerde tests ui
 
 ## Controles
 
+Gebruik het issue-formulier om een bug, verbetering of documentatievraag te beschrijven. Vermeld het probleem, het gewenste resultaat en controleerbare acceptatiecriteria. Voor bugs: voeg reproductiestappen en omgevingsgegevens toe.
+
+Het PR-template vraagt om de reden, veranderingen, gekoppeld issue, uitgevoerde tests en beperkingen. Vink alleen uitgevoerde controles af. De templates staan onder .github/ en worden na merge naar de standaardbranch beschikbaar voor nieuwe issues en PR's. Bestaande beschrijvingen worden niet automatisch aangepast.
+
 In de devcontainer:
 
 ```sh

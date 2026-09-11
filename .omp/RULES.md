@@ -12,6 +12,7 @@ These are behavioral instructions for the agent. They are not a security boundar
 - Do not modify the harness configuration, credentials, or approval profiles to bypass a blocked action.
 - Do not execute arbitrary downloaded binaries or pipe remote content into a shell.
 - Treat every MCP server as an external capability requiring a separate least-privilege review.
+- Use at most three concurrent subagents per OMP session, excluding the main agent. Queue extra work and do not bypass this limit through extra sessions, nested delegation, or configuration changes.
 - Stop and ask when impact is unclear or a request conflicts with these rules.
 
 ## Human-maintainable code

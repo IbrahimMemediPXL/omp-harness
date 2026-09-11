@@ -20,6 +20,8 @@ Lees de [beginnershandleiding](docs/getting-started.md) voor alle stappen en een
 
 ## Dagelijks gebruik
 
+Alle profielen begrenzen OMP tot **drie gelijktijdige subagents per sessie**, naast de hoofdagent. Extra taken wachten. Zie de [uitbreidingsgids](docs/extending.md) voor de grenzen van deze instelling.
+
 | Commando in de container | Betekenis |
 | --- | --- |
 | `make help` | Overzicht van opdrachten. |
