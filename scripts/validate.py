@@ -46,6 +46,8 @@ def main():
         if profile != 'yolo':
             assert config['tools']['approval']['bash'] == 'prompt'
             assert config['tools']['approval']['eval'] == 'prompt'
+            # Edit patches can also delete or rename files.
+            assert config['tools']['approval']['edit'] == 'prompt', profile
     for path in (ROOT / '.devcontainer').iterdir():
         if path.suffix == '.sh' or path.name.startswith('omp-'):
             run('bash', '-n', str(path))

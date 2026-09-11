@@ -47,7 +47,7 @@ Beperk een skill tot één taak. Zet lange referenties apart en vermeld wanneer 
 
 ## Profielen
 
-Controleer bij wijzigingen zowel .omp/config.yml als alle drie overlays in .omp/profiles/. Houd shell/eval-goedkeuring expliciet in safe en normal. Gebruik `make profiles` en test echte prompts met onschuldige edits en shellcommando's.
+Controleer bij wijzigingen zowel .omp/config.yml als alle drie overlays in .omp/profiles/. Houd shell/eval- en edit-goedkeuring expliciet in safe en normal: edit-patches kunnen ook verwijderen of hernoemen. Gebruik `make profiles` voor de effectieve approvalMode; deze ene waarde toont niet de per-tooloverrides. `make doctor` controleert ook de edit-policy. Test echte prompts met onschuldige edits en shellcommando's.
 
 Raadpleeg de [upstream documentatie](https://github.com/can1357/oh-my-pi/tree/main/docs) voor sleutels die bij je OMP-versie horen. Verzin geen opties en versoepel geen beveiliging om een geblokkeerde taak alsnog te laten slagen.
 
@@ -101,7 +101,7 @@ De baseline en alle profielen stellen `task.maxConcurrency: 3` in. OMP begrenst 
 
 De instelling is geen globale grens over meerdere OMP-processen of geneste sessies en blijft wijzigbaar door processen met dezelfde rechten. De werkregels verbieden omzeiling via extra sessies, geneste delegatie of configuratiewijzigingen. Er is geen eigen orkestratielaag toegevoegd.
 
-Controleer na een herstart van OMP met `make doctor`, of afzonderlijk met `omp --config .omp/profiles/safe.yml config get task.maxConcurrency`. Verwacht `3`. Doe na OMP-upgrades een onschuldige proef met vier onafhankelijke taken: maximaal drie mogen tegelijk draaien. De statische validatie voert die modeltest niet uit.
+Controleer na een herstart van OMP met `make doctor`, of afzonderlijk met `PI_CONFIG_FILES=.omp/profiles/safe.yml omp config get task.maxConcurrency`. Verwacht `3`. Gebruik voor `config get` de omgevingsvariabele: OMP 18.1.17 geeft de launch-optie `--config` niet door aan dit subcommando. De interactieve launchers blijven `--config` gebruiken. Doe na OMP-upgrades een onschuldige proef met vier onafhankelijke taken: maximaal drie mogen tegelijk draaien. De statische validatie voert die modeltest niet uit.
 
 De instelling en sessiescope zijn gecontroleerd in het [upstream schema](https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/src/config/settings-schema.ts) en de [task-implementatie](https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/src/task/index.ts).
 

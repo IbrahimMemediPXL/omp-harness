@@ -29,13 +29,15 @@ OMP Harness is een startomgeving, geen eigen AI-model en geen vervanging van OMP
 
 ## Goedkeuringen
 
-| Profiel | Lezen | Gewone edits | Bash/eval | Delete/move |
-| --- | --- | --- | --- | --- |
-| SAFE | Automatisch | Prompt | Prompt | Prompt |
-| NORMAL | Automatisch | Automatisch | Prompt | Prompt |
-| YOLO | Automatisch | Automatisch | Doorgaans automatisch | Doorgaans automatisch |
+| Profiel | Lezen | `write` | `edit`/patch | Bash/eval | Delete/move |
+| --- | --- | --- | --- | --- | --- |
+| SAFE | Automatisch | Prompt | Prompt | Prompt | Prompt |
+| NORMAL | Automatisch | Automatisch | Prompt | Prompt | Prompt |
+| YOLO | Automatisch | Automatisch | Doorgaans automatisch | Doorgaans automatisch | Doorgaans automatisch |
 
 Expliciete deny/prompt-policies en toolgedrag kunnen deze samenvatting beperken. Browser en computer staan in alle overlays uit. Een goedgekeurd shellcommando kan zelf schrijven of verwijderen: de tabel is geen filesystem-ACL.
+
+NORMAL vraagt bewust bevestiging voor iedere `edit`/patch: OMP kan daarmee ook bestanden verwijderen of hernoemen, zonder de afzonderlijke `delete`/`move`-policy te raadplegen. Gewone edits krijgen daarom eveneens een prompt. De `write`-tool blijft automatisch toegestaan en kan ook bestaande inhoud overschrijven; dit profiel beschermt niet tegen ieder gegevensverlies.
 
 ## Versies
 

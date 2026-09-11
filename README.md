@@ -27,7 +27,7 @@ Alle profielen begrenzen OMP tot **drie gelijktijdige subagents per sessie**, na
 | `make help` | Overzicht van opdrachten. |
 | `make login` / `make logout` | OMP openen met aanwijzingen voor aan- of afmelden. |
 | `make safe` | Goedkeuring voor edits en uitvoering; start hiermee. |
-| `make normal` | Edits toestaan; prompts voor onder andere shelluitvoering. |
+| `make normal` | Schrijven via `write` toestaan; prompts voor `edit`/patch en shelluitvoering. |
 | `make yolo` | Minder goedkeuringen; alleen voor bewust begrensd werk. |
 | `make doctor` | Draaiende container en OMP-profielen controleren. |
 | `make validate` | Statische controles zonder modelaccount. |

@@ -37,17 +37,25 @@ check 'OMP version smoke test' omp --version
 for spec in safe:always-ask normal:write yolo:yolo; do
   profile=${spec%%:*}
   expected=${spec#*:}
-  if actual=$(omp --config ".omp/profiles/$profile.yml" config get tools.approvalMode 2>/dev/null); then
+  if actual=$(PI_CONFIG_FILES=".omp/profiles/$profile.yml" omp config get tools.approvalMode 2>/dev/null); then
     check "$profile approval mode" test "$actual" = "$expected"
   else
     printf 'FAIL Cannot read %s profile\n' "$profile"
     failed=1
   fi
-  if actual=$(omp --config ".omp/profiles/$profile.yml" config get task.maxConcurrency 2>/dev/null); then
+  if actual=$(PI_CONFIG_FILES=".omp/profiles/$profile.yml" omp config get task.maxConcurrency 2>/dev/null); then
     check "$profile subagent concurrency limit" test "$actual" = 3
   else
     printf 'FAIL Cannot read %s subagent limit\n' "$profile"
     failed=1
+  fi
+  if [[ "$profile" != yolo ]]; then
+    if actual=$(PI_CONFIG_FILES=".omp/profiles/$profile.yml" omp config get tools.approval --json | jq -er '.value.edit'); then
+      check "$profile edit/patch approval" test "$actual" = prompt
+    else
+      printf 'FAIL Cannot read %s edit/patch approval\n' "$profile"
+      failed=1
+    fi
   fi
 done
 printf '%s\n' 'INFO OAuth is not verified by doctor. Use make login and test a small request.'

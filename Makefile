@@ -18,7 +18,7 @@ logout: ## Open SAFE OMP; enter /logout and select the provider
 safe: ## Prompt for writes and execution
 	@bash .devcontainer/omp-safe $(ARGS)
 
-normal: ## Allow edits; prompt for bash, eval, delete and move
+normal: ## Allow write; prompt for edit/patch, bash, eval, delete and move
 	@bash .devcontainer/omp-normal $(ARGS)
 
 yolo: ## Reduce approvals (not a stronger sandbox)
@@ -34,7 +34,7 @@ version: ## Print installed OMP version
 profiles: ## Print effective approval modes
 	@set -e; for profile in safe normal yolo; do \
 	  printf '%s: ' "$$profile"; \
-	  omp --config ".omp/profiles/$$profile.yml" config get tools.approvalMode; \
+	  PI_CONFIG_FILES=".omp/profiles/$$profile.yml" omp config get tools.approvalMode; \
 	done
 
 validate: ## Run static checks without model credentials
