@@ -4,15 +4,15 @@
 
 Installeer Git, Docker Desktop, VS Code en de extensie **Dev Containers**. Start Docker Desktop. OMP en Make hoef je niet op je computer te installeren.
 
-Voer op je computer uit zolang deze setup op de branch `initial` staat:
+Voer op je computer uit om de standaardbranch te clonen:
 
 ```sh
-git clone --branch initial https://github.com/IbrahimMemediPXL/omp-harness.git
+git clone https://github.com/IbrahimMemediPXL/omp-harness.git
 cd omp-harness
 code .
 ```
 
-Na het samenvoegen van de PR kun je de standaardbranch clonen. Zonder het code-commando: open de map via het menu van VS Code.
+Zonder het code-commando: open de map via het menu van VS Code.
 
 Kies **Dev Containers: Reopen in Container** via het commandopalet. De eerste build downloadt software en kan enkele minuten duren. Gebruik installatiescripts alleen als je de bron vertrouwt.
 

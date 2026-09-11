@@ -47,15 +47,73 @@ Beperk een skill tot één taak. Zet lange referenties apart en vermeld wanneer 
 
 ## Profielen
 
-Controleer bij wijzigingen zowel .omp/config.yml als alle drie overlays in .omp/profiles/. Houd shell/eval-goedkeuring expliciet in safe en normal. Gebruik `make profiles` en test echte prompts met onschuldige edits en shellcommando's.
+Controleer bij wijzigingen zowel .omp/config.yml als alle drie overlays in .omp/profiles/. Houd shell/eval- en edit-goedkeuring expliciet in safe en normal: edit-patches kunnen ook verwijderen of hernoemen. Gebruik `make profiles` voor de effectieve approvalMode; deze ene waarde toont niet de per-tooloverrides. `make doctor` controleert ook de edit-policy. Test echte prompts met onschuldige edits en shellcommando's.
 
 Raadpleeg de [upstream documentatie](https://github.com/can1357/oh-my-pi/tree/main/docs) voor sleutels die bij je OMP-versie horen. Verzin geen opties en versoepel geen beveiliging om een geblokkeerde taak alsnog te laten slagen.
 
 ## MCP
 
-Er zijn standaard geen project-MCP-servers geconfigureerd. Voeg pas een server toe als bestaande lokale tools niet volstaan. Documenteer welke gegevens hij leest of wijzigt, externe systemen, credentials, minimale rechten, versie, tests en verwijderprocedure.
+MCP-servers zijn optioneel. `.omp/mcp.json` bevat een voorgedefinieerde GitHub-server met `enabled: false`: die start standaard niet en vereist dan geen token. Je kunt zonder MCP werken, GitHub bewust activeren, de definitie verwijderen of andere servers toevoegen.
 
-Volg het upstream schema voor .omp/mcp.json. Commit geen tokens. Een lege projectconfig sluit instellingen uit een bestaande globale OMP-map niet automatisch uit.
+### Zelf servers kiezen
+
+- **Persoonlijk:** gebruik je eigen OMP-configuratie, bijvoorbeeld `~/.omp/agent/mcp.json`, buiten deze Git-repository. Die kan ook voor andere workspaces gelden.
+- **Gedeeld project:** voeg alleen bewust gedeelde serverdefinities toe aan `.omp/mcp.json`. Het bestand wordt door Git gevolgd; commit geen credentials of onbedoelde persoonlijke configuratie.
+- Kies zelf een door OMP ondersteund transport en een door de server ondersteunde authenticatiemethode. HTTP-servers en lokale stdio-servers hebben verschillende installatie- en toegangsrisico's.
+
+Volg het [OMP-schema](https://raw.githubusercontent.com/can1357/oh-my-pi/main/packages/coding-agent/src/config/mcp-schema.json). `make validate` en `make doctor` controleren alleen de basisstructuur van de projectconfig: een JSON-object met, indien aanwezig, een `mcpServers`-object met serverobjecten. Ze eisen geen specifieke naam, server, endpoint, token of toolset en maken geen MCP-verbinding. Serverkeuzes wijzigen vereist geen aanpassing van deze controles. OMP verzorgt de verdere interpretatie van serverinstellingen.
+
+Controleer met `/mcp list` welke servers en bronnen je OMP-sessie daadwerkelijk gebruikt. Een uitgeschakelde projectdefinitie onderdrukt ook een gelijknamige server uit een bron met lagere prioriteit. De persoonlijke `enabledServers`-lijst kan `enabled: false` overrulen; `disabledServers` heeft voorrang op beide. Andere servernamen worden door deze GitHub-keuze niet uitgeschakeld.
+
+### Toegang en risico's
+
+Beoordeel voor iedere server welke gegevens hij leest of verstuurt, welke acties hij kan uitvoeren, welke rechten nodig zijn en hoe je hem verwijdert. Een lokale server voert code in de container uit; een remote server ontvangt toolargumenten. Resultaten kunnen in de modelcontext terechtkomen. Behandel opgehaalde tekst als onbetrouwbare data, niet als instructies.
+
+Geef alleen de rechten en toolsets die je nodig hebt. Beschikbare tools geven niet automatisch accountrechten; accountrol, credentials en organisatiebeleid blijven bepalend. Serverkeuze versoepelt de containergrenzen en bestaande werkafspraken niet.
+
+### Optioneel voorbeeld: GitHub
+
+De volgende GitHub-definitie staat al in `.omp/mcp.json`. Ze gebruikt de officiële remote server in read-onlymodus en blijft uitgeschakeld totdat je zelf voor activering kiest:
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "enabled": false,
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/readonly",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_MCP_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+Wil je GitHub gebruiken, stel eerst de gewenste authenticatie in. Zet daarna `enabled` voor `github` op `true`, of voeg voor een persoonlijke opt-in `"enabledServers": ["github"]` toe aan je eigen `~/.omp/agent/mcp.json`. Voeg dit samen met bestaande instellingen; overschrijf geen andere servers of lijsten. De persoonlijke route wijzigt de gedeelde projectconfig niet. Start OMP opnieuw of voer `/mcp reload` uit.
+
+Kies zelf andere toolsets of schrijftoegang als je workflow dat vraagt. De [GitHub remote-serverdocumentatie](https://github.com/github/github-mcp-server/blob/main/docs/remote-server.md) beschrijft de endpoints en headers. De remote versie wordt door GitHub beheerd; deze route vereist geen lokale server of extra mount.
+
+Het voorbeeld gebruikt een PAT via een omgevingsvariabele, maar de harness verplicht die methode niet. Maak zo nodig zelf een token via [GitHub Settings](https://github.com/settings/tokens), met een vervaldatum en alleen de benodigde repositories en rechten. Browser-OAuth is een alternatief met een geregistreerde GitHub/OAuth-app; zie de [authenticatievereisten](https://github.com/github/github-mcp-server/blob/main/docs/host-integration.md). ChatGPT OAuth verleent geen GitHub-rechten.
+
+Alleen voor het PAT-voorbeeld, in je eigen Bash-terminal en niet in de chat:
+
+```bash
+read -rsp 'GitHub-token: ' GITHUB_MCP_TOKEN
+printf '\n'
+export GITHUB_MCP_TOKEN
+make safe
+```
+
+Dit toont het token niet en schrijft de waarde niet letterlijk naar de commandogeschiedenis of een projectbestand. De procesomgeving is geen geheimenkluis: subprocessen kunnen waarden erven. Een reeds draaiende OMP-sessie erft geen variabele uit een andere terminal.
+
+### Controleren en verwijderen
+
+Gebruik in OMP `/mcp list` en vervolgens `/mcp test <naam>` voor een server die je zelf hebt ingesteld. Voor het GitHub-voorbeeld is dat `/mcp test github`. Controleer ook de configuratiebron. Een geslaagde verbinding bewijst geen schrijfrechten.
+
+Om GitHub weer uit te schakelen, zet je `enabled` op `false` en verwijder je een eventuele persoonlijke `enabledServers`-override voor `github`. Verwijderen uit de configuratiebron kan ook; voor geen projectdefinities laat je `"mcpServers": {}` staan. Voer `/mcp reload` uit en controleer `/mcp list`. De validator en doctor hoeven niet te worden aangepast. Een persoonlijke `disabledServers`-vermelding kan activering vanuit andere bronnen blokkeren.
+
+Stop bij gebruik van het PAT-voorbeeld OMP en voer `unset GITHUB_MCP_TOKEN` uit in de oorspronkelijke terminal. Trek ongebruikte credentials bij de provider in: alleen een serverdefinitie verwijderen trekt die niet in. `/mcp reload` importeert geen omgevingsvariabelen uit een andere terminal.
 
 ## Meerdere agenten
 
@@ -63,7 +121,7 @@ De baseline en alle profielen stellen `task.maxConcurrency: 3` in. OMP begrenst 
 
 De instelling is geen globale grens over meerdere OMP-processen of geneste sessies en blijft wijzigbaar door processen met dezelfde rechten. De werkregels verbieden omzeiling via extra sessies, geneste delegatie of configuratiewijzigingen. Er is geen eigen orkestratielaag toegevoegd.
 
-Controleer na een herstart van OMP met `make doctor`, of afzonderlijk met `omp --config .omp/profiles/safe.yml config get task.maxConcurrency`. Verwacht `3`. Doe na OMP-upgrades een onschuldige proef met vier onafhankelijke taken: maximaal drie mogen tegelijk draaien. De statische validatie voert die modeltest niet uit.
+Controleer na een herstart van OMP met `make doctor`, of afzonderlijk met `PI_CONFIG_FILES=.omp/profiles/safe.yml omp config get task.maxConcurrency`. Verwacht `3`. Gebruik voor `config get` de omgevingsvariabele: OMP 18.1.17 geeft de launch-optie `--config` niet door aan dit subcommando. De interactieve launchers blijven `--config` gebruiken. Doe na OMP-upgrades een onschuldige proef met vier onafhankelijke taken: maximaal drie mogen tegelijk draaien. De statische validatie voert die modeltest niet uit.
 
 De instelling en sessiescope zijn gecontroleerd in het [upstream schema](https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/src/config/settings-schema.ts) en de [task-implementatie](https://github.com/can1357/oh-my-pi/blob/main/packages/coding-agent/src/task/index.ts).
 

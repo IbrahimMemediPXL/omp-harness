@@ -21,7 +21,10 @@ def main():
     assert '--cap-drop=ALL' in container['runArgs']
     assert '--security-opt=no-new-privileges:true' in container['runArgs']
     mcp = json.loads((ROOT / '.omp/mcp.json').read_text())
-    assert mcp['mcpServers'] == {}
+    assert isinstance(mcp, dict), 'MCP configuration must be an object'
+    servers = mcp.get('mcpServers', {})
+    assert isinstance(servers, dict), 'mcpServers must be an object'
+    assert all(isinstance(server, dict) for server in servers.values()), 'MCP server definitions must be objects'
     baseline = yaml.safe_load((ROOT / '.omp/config.yml').read_text())
     assert baseline['task']['maxConcurrency'] == 3
     for folder in ['.omp', '.github']:
@@ -39,6 +42,8 @@ def main():
         if profile != 'yolo':
             assert config['tools']['approval']['bash'] == 'prompt'
             assert config['tools']['approval']['eval'] == 'prompt'
+            # Edit patches can also delete or rename files.
+            assert config['tools']['approval']['edit'] == 'prompt', profile
     for path in (ROOT / '.devcontainer').iterdir():
         if path.suffix == '.sh' or path.name.startswith('omp-'):
             run('bash', '-n', str(path))

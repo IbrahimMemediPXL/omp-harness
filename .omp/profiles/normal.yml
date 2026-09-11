@@ -5,6 +5,7 @@ tools:
   approval:
     bash: prompt
     eval: prompt
+    edit: prompt
     delete: prompt
     move: prompt
     computer: deny
