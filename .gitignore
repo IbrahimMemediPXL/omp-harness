@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+incoming/*
+!incoming/.gitkeep
+projects/*
+!projects/.gitkeep
+__pycache__/
+temp/*
+!temp/.gitkeep
+output/*
+!output/.gitkeep
+.DS_Store
+Thumbs.db

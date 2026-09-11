@@ -1,0 +1,10 @@
+.git
+.env
+.env.*
+!.env.example
+incoming
+projects
+output
+temp
+**/.DS_Store
+**/Thumbs.db

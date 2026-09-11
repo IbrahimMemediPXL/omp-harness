@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd /workspace
+exec omp --config .omp/profiles/safe.yml "$@"

@@ -1,0 +1,8 @@
+tools:
+  approvalMode: yolo
+  approval:
+    computer: deny
+computer:
+  enabled: false
+browser:
+  enabled: false

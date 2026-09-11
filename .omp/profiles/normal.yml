@@ -1,0 +1,12 @@
+tools:
+  approvalMode: write
+  approval:
+    bash: prompt
+    eval: prompt
+    delete: prompt
+    move: prompt
+    computer: deny
+computer:
+  enabled: false
+browser:
+  enabled: false

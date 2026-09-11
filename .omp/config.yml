@@ -1,0 +1,18 @@
+modelRoles: {}
+tools:
+  approvalMode: always-ask
+  maxTimeout: 300
+  intentTracing: true
+  approval:
+    computer: deny
+computer:
+  enabled: false
+browser:
+  enabled: false
+memory:
+  backend: "off"
+autolearn:
+  enabled: false
+skills:
+  enabled: true
+  enablePiProject: true
