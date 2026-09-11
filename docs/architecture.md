@@ -10,7 +10,7 @@ OMP Harness is een startomgeving, geen eigen AI-model en geen vervanging van OMP
 | Named volume op /home/agent/.omp | Login en sessies behouden bij rebuild | Gevoelige persistente state, geen automatische encryptiegarantie |
 | Make | Korte, vindbare commando's | Draait in de container, niet vereist op de host |
 | Drie overlays | Eén baseline met expliciete approval-keuze | Geen afzonderlijke OS-sandbox per profiel |
-| Optionele MCP-config | Geen projectservers standaard; gebruikers kiezen hun eigen integraties | Persoonlijke/globale discovery-bronnen apart beoordelen |
+| Optionele MCP-config | GitHub voorgedefinieerd maar uitgeschakeld; gebruikers kiezen hun integraties | Persoonlijke overrides en andere discovery-bronnen apart beoordelen |
 | Memory/autolearn uit | Minder onverwachte automatische state | Sessies en OAuth worden nog steeds opgeslagen |
 | Rules en skills | Consistent, menselijk onderhoudbaar werk | Gedragsinstructies, geen harde garantie |
 
@@ -47,4 +47,4 @@ De installer komt nog van upstream main; ook de basisimage en apt-packages zijn 
 
 ## Wijzigingen in deze eerste harness-versie
 
-Naam en repositorylinks aangepast; bestaande licentie behouden; private werkdirectories en .env-varianten genegeerd; LF-regelafbrekingen vastgelegd; credentialvolume per Dev Container benoemd; strengere initiële credentialmaprechten; onbetrouwbare OAuth-statusclaim uit doctor verwijderd; logout-uitleg en statische validatie toegevoegd; beginnersdocumentatie opgesplitst. De humane codingregels blijven behouden. MCP blijft optioneel met een lege projectconfig en GitHub als documentatievoorbeeld; er zijn geen autonome multi-agent-configuraties geactiveerd.
+Naam en repositorylinks aangepast; bestaande licentie behouden; private werkdirectories en .env-varianten genegeerd; LF-regelafbrekingen vastgelegd; credentialvolume per Dev Container benoemd; strengere initiële credentialmaprechten; onbetrouwbare OAuth-statusclaim uit doctor verwijderd; logout-uitleg en statische validatie toegevoegd; beginnersdocumentatie opgesplitst. De humane codingregels blijven behouden. MCP blijft optioneel: GitHub is voorgedefinieerd met `enabled: false` en wordt alleen bewust geactiveerd; er zijn geen autonome multi-agent-configuraties geactiveerd.

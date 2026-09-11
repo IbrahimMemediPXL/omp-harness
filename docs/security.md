@@ -14,7 +14,7 @@ VS Code kan extra faciliteiten injecteren, zoals credentialhelpers, SSH-agentfor
 - Alle projecten in dezelfde workspace zijn onderling zichtbaar. Gebruik aparte clones/containers voor vertrouwensgrenzen.
 - De agent kan zijn eigen projectconfiguratie wijzigen. SAFE/NORMAL zijn approval-defaults, geen onveranderbare policies.
 - Outbound netwerk heeft geen domeinfilter. Goedgekeurde code kan data versturen.
-- De projectconfig bevat standaard geen MCP-servers. Persoonlijke, globale of geïmporteerde configuraties kunnen wel servers toevoegen; controleer de daadwerkelijk geladen bronnen.
+- De projectconfig bevat GitHub MCP met `enabled: false`; er is standaard geen actieve projectserver. Persoonlijke overrides kunnen dit wijzigen en andere configuratiebronnen kunnen servers toevoegen. Controleer de daadwerkelijk geladen bronnen en status.
 - OAuth is geen afwezigheid van secrets: tokens zijn credentials en toegankelijk voor processen met dezelfde gebruikersrechten.
 
 ## OAuth-volume

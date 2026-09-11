@@ -53,7 +53,7 @@ Raadpleeg de [upstream documentatie](https://github.com/can1357/oh-my-pi/tree/ma
 
 ## MCP
 
-MCP-servers zijn optioneel. `.omp/mcp.json` bevat standaard een lege `mcpServers`-map: de harness vereist geen GitHub-token en kiest geen server voor je. Je kunt zonder MCP werken, één integratie toevoegen of meerdere servers combineren.
+MCP-servers zijn optioneel. `.omp/mcp.json` bevat een voorgedefinieerde GitHub-server met `enabled: false`: die start standaard niet en vereist dan geen token. Je kunt zonder MCP werken, GitHub bewust activeren, de definitie verwijderen of andere servers toevoegen.
 
 ### Zelf servers kiezen
 
@@ -63,7 +63,7 @@ MCP-servers zijn optioneel. `.omp/mcp.json` bevat standaard een lege `mcpServers
 
 Volg het [OMP-schema](https://raw.githubusercontent.com/can1357/oh-my-pi/main/packages/coding-agent/src/config/mcp-schema.json). `make validate` en `make doctor` controleren alleen de basisstructuur van de projectconfig: een JSON-object met, indien aanwezig, een `mcpServers`-object met serverobjecten. Ze eisen geen specifieke naam, server, endpoint, token of toolset en maken geen MCP-verbinding. Serverkeuzes wijzigen vereist geen aanpassing van deze controles. OMP verzorgt de verdere interpretatie van serverinstellingen.
 
-Een lege projectconfig schakelt bestaande persoonlijke, globale of geïmporteerde servers niet uit. Controleer met `/mcp list` welke servers en bronnen je OMP-sessie daadwerkelijk gebruikt.
+Controleer met `/mcp list` welke servers en bronnen je OMP-sessie daadwerkelijk gebruikt. Een uitgeschakelde projectdefinitie onderdrukt ook een gelijknamige server uit een bron met lagere prioriteit. De persoonlijke `enabledServers`-lijst kan `enabled: false` overrulen; `disabledServers` heeft voorrang op beide. Andere servernamen worden door deze GitHub-keuze niet uitgeschakeld.
 
 ### Toegang en risico's
 
@@ -73,12 +73,13 @@ Geef alleen de rechten en toolsets die je nodig hebt. Beschikbare tools geven ni
 
 ### Optioneel voorbeeld: GitHub
 
-Wil je GitHub MCP gebruiken, voeg dan zelf een definitie toe aan de gekozen persoonlijke of projectconfiguratie. Dit voorbeeld begint met de officiële remote server in read-onlymodus; het wordt niet automatisch ingeschakeld:
+De volgende GitHub-definitie staat al in `.omp/mcp.json`. Ze gebruikt de officiële remote server in read-onlymodus en blijft uitgeschakeld totdat je zelf voor activering kiest:
 
 ```json
 {
   "mcpServers": {
     "github": {
+      "enabled": false,
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp/readonly",
       "headers": {
@@ -89,7 +90,9 @@ Wil je GitHub MCP gebruiken, voeg dan zelf een definitie toe aan de gekozen pers
 }
 ```
 
-Voeg het voorbeeld samen met eventuele bestaande instellingen; overschrijf geen andere servers. Kies zelf andere toolsets of schrijftoegang als je workflow dat vraagt. De [GitHub remote-serverdocumentatie](https://github.com/github/github-mcp-server/blob/main/docs/remote-server.md) beschrijft de endpoints en headers. De remote versie wordt door GitHub beheerd; deze route vereist geen lokale server of extra mount.
+Wil je GitHub gebruiken, stel eerst de gewenste authenticatie in. Zet daarna `enabled` voor `github` op `true`, of voeg voor een persoonlijke opt-in `"enabledServers": ["github"]` toe aan je eigen `~/.omp/agent/mcp.json`. Voeg dit samen met bestaande instellingen; overschrijf geen andere servers of lijsten. De persoonlijke route wijzigt de gedeelde projectconfig niet. Start OMP opnieuw of voer `/mcp reload` uit.
+
+Kies zelf andere toolsets of schrijftoegang als je workflow dat vraagt. De [GitHub remote-serverdocumentatie](https://github.com/github/github-mcp-server/blob/main/docs/remote-server.md) beschrijft de endpoints en headers. De remote versie wordt door GitHub beheerd; deze route vereist geen lokale server of extra mount.
 
 Het voorbeeld gebruikt een PAT via een omgevingsvariabele, maar de harness verplicht die methode niet. Maak zo nodig zelf een token via [GitHub Settings](https://github.com/settings/tokens), met een vervaldatum en alleen de benodigde repositories en rechten. Browser-OAuth is een alternatief met een geregistreerde GitHub/OAuth-app; zie de [authenticatievereisten](https://github.com/github/github-mcp-server/blob/main/docs/host-integration.md). ChatGPT OAuth verleent geen GitHub-rechten.
 
@@ -108,7 +111,7 @@ Dit toont het token niet en schrijft de waarde niet letterlijk naar de commandog
 
 Gebruik in OMP `/mcp list` en vervolgens `/mcp test <naam>` voor een server die je zelf hebt ingesteld. Voor het GitHub-voorbeeld is dat `/mcp test github`. Controleer ook de configuratiebron. Een geslaagde verbinding bewijst geen schrijfrechten.
 
-Verwijder een ongewenste server uit de configuratiebron waarin je hem hebt toegevoegd en voer `/mcp reload` uit. Voor geen projectservers laat je `"mcpServers": {}` staan. De validator en doctor hoeven niet te worden aangepast. Controleer daarna opnieuw `/mcp list`, omdat een andere bron dezelfde server kan toevoegen.
+Om GitHub weer uit te schakelen, zet je `enabled` op `false` en verwijder je een eventuele persoonlijke `enabledServers`-override voor `github`. Verwijderen uit de configuratiebron kan ook; voor geen projectdefinities laat je `"mcpServers": {}` staan. Voer `/mcp reload` uit en controleer `/mcp list`. De validator en doctor hoeven niet te worden aangepast. Een persoonlijke `disabledServers`-vermelding kan activering vanuit andere bronnen blokkeren.
 
 Stop bij gebruik van het PAT-voorbeeld OMP en voer `unset GITHUB_MCP_TOKEN` uit in de oorspronkelijke terminal. Trek ongebruikte credentials bij de provider in: alleen een serverdefinitie verwijderen trekt die niet in. `/mcp reload` importeert geen omgevingsvariabelen uit een andere terminal.
 
