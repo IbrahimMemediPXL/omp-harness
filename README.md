@@ -37,6 +37,51 @@ Alle profielen begrenzen OMP tot **drie gelijktijdige subagents per sessie**, na
 
 Argumenten doorgeven kan met `make safe ARGS="--help"`. Gebruik alleen vertrouwde argumenten: Make gebruikt een shell.
 
+## OMP-commando's
+
+De `make`-commando's hierboven horen bij deze harness. Hieronder staan veelgebruikte commando's van **OMP zelf**, gecontroleerd voor OMP 18.1.17. Het is een selectie; opties kunnen per versie veranderen.
+
+### In de containerterminal
+
+Voer deze commando's uit vanuit `/workspace`, niet in het invoerveld van OMP.
+
+| Commando | Uitleg |
+| --- | --- |
+| `omp` | Start OMP rechtstreeks met de geladen configuratie. Gebruik voor dagelijks werk bij voorkeur `make safe`. |
+| `omp --help` | Toon beschikbare terminalcommando's, opties en voorbeelden. |
+| `omp --version` | Toon de geïnstalleerde OMP-versie. |
+| `omp --continue` | Hervat de laatste sessie voor de huidige werkmap. |
+| `omp --resume` | Open de sessiekiezer om een eerdere sessie te hervatten. |
+| `omp models` | Toon de modelcatalogus; een vermelding bewijst niet dat je account toegang heeft. |
+| `omp models find <zoekterm>` | Zoek een model op naam of deel van de naam. |
+| `omp config get task.maxConcurrency` | Lees de ingestelde limiet voor gelijktijdige subagenten. |
+| `omp -p "Leg de projectstructuur uit"` | Voer een opdracht niet-interactief uit en sluit daarna af. Dit gebruikt een model en kan tools aanroepen. |
+
+Vervang `<zoekterm>` door je eigen tekst, zonder de punthaken. Om expliciet het SAFE-profiel te behouden bij hervatten: `make safe ARGS="--continue"` of `make safe ARGS="--resume"`. Voor de effectieve instellingen van de drie harness-profielen gebruik je `make profiles`; de losse `config get`-opdracht hierboven selecteert geen profieloverlay.
+
+### Binnen een actieve OMP-sessie
+
+Typ deze slashcommando's **in het invoerveld van OMP**, niet in Bash.
+
+| Commando | Uitleg |
+| --- | --- |
+| `/login openai-codex` | Start de browseraanmelding voor de ChatGPT/Codex-provider. |
+| `/logout` | Kies de provider waarbij je wilt afmelden; dit verwijdert niet je werkbestanden. |
+| `/model` | Bekijk en kies een model voor je werk. De beschikbare modellen hangen af van je providers en account. |
+| `/session info` | Toon informatie en statistieken over de huidige sessie. |
+| `/context` | Bekijk hoeveel context de huidige sessie gebruikt. |
+| `/compact` | Vat eerdere context samen om ruimte vrij te maken; dit kan modelgebruik kosten. |
+| `/tools` | Bekijk welke tools beschikbaar zijn in deze sessie. |
+| `/review` | Start een codereview; dit kan reviewer-subagenten en extra modelgebruik inzetten. |
+| `/jobs` | Bekijk achtergrondtaken en hun status. |
+| `/mcp list` | Toon geconfigureerde MCP-servers, hun status en configuratiebron. |
+| `/mcp enable github` | Activeer de optionele GitHub-server. Stel eerst de gewenste authenticatie en rechten in. |
+| `/mcp disable github` | Schakel GitHub MCP uit; dit trekt je token niet in bij GitHub. |
+| `/mcp test github` | Test de verbinding met GitHub MCP; dit bewijst geen schrijfrechten. |
+| `/mcp reload` | Herlaad MCP-configuratie en runtime-tools na wijzigingen. Dit importeert geen variabelen uit een andere terminal. |
+
+Bij MCP-commando's kun je `github` vervangen door de naam van een andere zelfgekozen server. GitHub blijft standaard uitgeschakeld; zie [MCP instellen](docs/extending.md#mcp) voor de opt-in en configuratiebronnen. Gebruik `omp <commando> --help` voor terminaldetails en de [upstream OMP-documentatie](https://github.com/can1357/oh-my-pi#readme) voor meer mogelijkheden.
+
 ## Bestanden
 
 | Map | Gebruik |
