@@ -14,7 +14,7 @@ VS Code kan extra faciliteiten injecteren, zoals credentialhelpers, SSH-agentfor
 - Alle projecten in dezelfde workspace zijn onderling zichtbaar. Gebruik aparte clones/containers voor vertrouwensgrenzen.
 - De agent kan zijn eigen projectconfiguratie wijzigen. SAFE/NORMAL zijn approval-defaults, geen onveranderbare policies.
 - Outbound netwerk heeft geen domeinfilter. Goedgekeurde code kan data versturen.
-- De projectconfig bevat GitHub MCP met alle toolsets, zonder read-onlyfilter. Dit sluit globale MCP's, plugins of andere discovery-bronnen niet categorisch uit.
+- De projectconfig bevat standaard geen MCP-servers. Persoonlijke, globale of geïmporteerde configuraties kunnen wel servers toevoegen; controleer de daadwerkelijk geladen bronnen.
 - OAuth is geen afwezigheid van secrets: tokens zijn credentials en toegankelijk voor processen met dezelfde gebruikersrechten.
 
 ## OAuth-volume
@@ -31,9 +31,9 @@ Controleer `git diff --cached` en `git status` vóór elke commit. .gitignore is
 
 GitHub-toegang in deze chat is niet hetzelfde als GitHub-auth in de container. ChatGPT-login verleent geen GitHub-rechten. Voeg geen host-SSH-map toe als snelle oplossing. Beoordeel een aparte minimale authenticatieflow als je vanuit OMP wilt pushen.
 
-GitHub MCP gebruikt uitsluitend het officiële HTTPS-endpoint, zonder lokale server of extra mounts. Alle toolsets zijn beschikbaar gesteld; tokenrechten, accountrol en organisatiebeleid bepalen welke acties werkelijk zijn toegestaan. Dit kan ook wijzigingen en verwijderingen omvatten. Bestaande goedkeuringen en het verbod op rechtstreeks publiceren naar de default branch blijven gelden.
+MCP is optioneel. De gebruiker kiest zelf servers, transport, authenticatie en rechten; de harness dwingt geen GitHub-server, endpoint of tokenmethode af. Beoordeel iedere gekozen server op gegevensdeling, uitvoerrechten en toegangsbereik. Een lokale server kan code uitvoeren met de rechten van de containergebruiker; een remote server ontvangt toolargumenten. Bestaande containergrenzen, goedkeuringen en publiceren via featurebranch en PR blijven gelden.
 
-Het token wordt door de gebruiker als `GITHUB_MCP_TOKEN` ingesteld, niet in de projectconfig opgeslagen. De procesomgeving is geen geheimenkluis: subprocessen kunnen het token erven. Lees of publiceer geen credentials, ook niet via beschikbare MCP-tools. GitHub ontvangt toolargumenten; resultaten kunnen in de modelcontext terechtkomen. Zie [MCP instellen, testen en verwijderen](extending.md#mcp).
+Zet geen credentials in gedeelde projectconfiguratie. Gebruik de authenticatiemethode die je gekozen server en OMP ondersteunen; een procesomgeving is geen geheimenkluis en subprocessen kunnen waarden erven. Lees of publiceer geen credentials, ook niet via beschikbare MCP-tools. Serverresultaten kunnen in de modelcontext terechtkomen. De controles valideren alleen de basisstructuur van de project-MCP-config, niet de veiligheid of rechten van een server. Zie [MCP kiezen, instellen en verwijderen](extending.md#mcp).
 
 ## Veilige gewoonten
 

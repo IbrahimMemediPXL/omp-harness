@@ -17,13 +17,11 @@ check 'Working directory is /workspace' test "$PWD" = /workspace
 check 'Running as agent' test "$(id -un)" = agent
 check 'OMP installed' bash -c 'command -v omp >/dev/null'
 check 'Native rules exist' test -s .omp/RULES.md
-check 'Only reviewed GitHub MCP server' jq -e '.mcpServers == {
-  "github": {
-    "type": "http",
-    "url": "https://api.githubcopilot.com/mcp/x/all",
-    "headers": {"Authorization": "Bearer ${GITHUB_MCP_TOKEN}"}
-  }
-}' .omp/mcp.json
+check 'MCP configuration structure' jq -e '
+  type == "object" and
+  ((if has("mcpServers") then .mcpServers else {} end) |
+    type == "object" and all(.[]; type == "object"))
+' .omp/mcp.json
 for dir in incoming projects output temp; do
   check "Directory: $dir" test -d "$dir"
 done
@@ -59,6 +57,6 @@ for spec in safe:always-ask normal:write yolo:yolo; do
   fi
 done
 printf '%s\n' 'INFO OAuth is not verified by doctor. Use make login and test a small request.'
-printf '%s\n' 'INFO GitHub MCP authentication is not verified. Use /mcp test github in OMP.'
+printf '%s\n' 'INFO MCP servers are optional. Use /mcp list and /mcp test <name> in OMP for servers you choose to enable.'
 printf '%s\n' 'INFO Check actual mounts and limits with docker inspect on the host.'
 exit "$failed"

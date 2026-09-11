@@ -18,6 +18,8 @@ Deze route gebruikt ChatGPT-aanmelding, geen OpenAI API-key. Beschikbaarheid han
 
 Lees de [beginnershandleiding](docs/getting-started.md) voor alle stappen en een eerste oefening.
 
+MCP-servers zijn **optioneel**. Standaard configureert deze repo geen projectservers en is geen GitHub-token nodig. Kies zelf of je MCP gebruikt, welke servers je vertrouwt en welke rechten je toestaat. Zie [MCP kiezen en instellen](docs/extending.md#mcp); bestaande persoonlijke of globale OMP-configuraties blijven apart van deze standaard.
+
 ## Dagelijks gebruik
 
 Alle profielen begrenzen OMP tot **drie gelijktijdige subagents per sessie**, naast de hoofdagent. Extra taken wachten. Zie de [uitbreidingsgids](docs/extending.md) voor de grenzen van deze instelling.
